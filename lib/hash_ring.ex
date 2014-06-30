@@ -14,6 +14,17 @@ defmodule HashRing do
   @mode_normal 1
   @mode_libmemcached_compat 2
 
+  def start(opts \\ []) do
+    case :erl_ddll.load_driver(lib_path, @driver) do
+      :ok ->
+        {replicas, opts}  = Keyword.pop(opts, :replicas, 128)
+        {hash_func, opts} = Keyword.pop(opts, :hash_func, :md5)
+        GenServer.start(__MODULE__, [replicas, hash_func], opts)
+      error ->
+        error
+    end
+  end
+
   def start_link(opts \\ []) do
     case :erl_ddll.load_driver(lib_path, @driver) do
       :ok ->
@@ -37,7 +48,7 @@ defmodule HashRing do
     GenServer.call(ring, {:drop, node})
   end
 
-  @spec find(pid, binary | atom) :: :ok | {:error, term}
+  @spec find(pid, binary | atom) :: {:ok, binary} | {:error, term}
   def find(ring, key) when is_atom(key), do: find(ring, to_string(key))
   def find(ring, key) when is_binary(key) do
     GenServer.call(ring, {:find, key})

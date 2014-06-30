@@ -27,33 +27,33 @@ defmodule HashRing do
 
   @spec add(pid, binary | atom) :: :ok | {:error, term}
   def add(ring, node) when is_atom(node), do: add(ring, to_string(node))
-  def add(ring, node) when is_pid(ring) do
+  def add(ring, node) when is_binary(node) do
     GenServer.call(ring, {:add, node})
   end
 
   @spec drop(pid, binary | atom) :: :ok | {:error, term}
   def drop(ring, node) when is_atom(node), do: add(ring, to_string(node))
-  def drop(ring, node) when is_pid(ring) do
+  def drop(ring, node) when is_binary(node) do
     GenServer.call(ring, {:drop, node})
   end
 
   @spec find(pid, binary | atom) :: :ok | {:error, term}
   def find(ring, key) when is_atom(key), do: find(ring, to_string(key))
-  def find(ring, key) when is_pid(ring) do
+  def find(ring, key) when is_binary(key) do
     GenServer.call(ring, {:find, key})
   end
 
   @spec stop(pid) :: :ok
-  def stop(ring) when is_pid(ring) do
+  def stop(ring) do
     GenServer.call(ring, :stop)
   end
 
   @spec set_mode(pid, atom) :: :ok | {:error, :term}
-  def set_mode(ring, :normal) when is_pid(ring) do
+  def set_mode(ring, :normal) do
     GenServer.call(ring, {:set_mode, @mode_normal})
   end
 
-  def set_mode(ring, :memcached) when is_pid(ring) do
+  def set_mode(ring, :memcached) do
     GenServer.call(ring, {:set_mode, @mode_libmemcached_compat})
   end
 

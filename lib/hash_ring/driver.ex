@@ -25,8 +25,8 @@ defmodule HashRing.Driver do
         error
     end
   end
-  def add(port, index, node) when is_atom(node), do: add(port, index, to_string(node))
-  def add(port, index, node) when is_binary(node) do
+  def add(port, index, node) when not is_binary(node), do: add(port, index, to_string(node))
+  def add(port, index, node) do
     command(port, <<3::size(8), index::size(32), size(node)::size(32), node::binary>>)
     receive do
       {port = port, {:data, <<0::size(8)>>}} ->
@@ -61,6 +61,7 @@ defmodule HashRing.Driver do
   end
   def create(_, _, _), do: {:error, :unsupported_hash_func}
 
+  def drop(port, index, node) when not is_binary(node), do: drop(port, index, to_string(node))
   def drop(port, index, node) do
     command(port, <<4::size(8), index::size(32), size(node)::size(32), node::binary>>)
     receive do
@@ -74,6 +75,7 @@ defmodule HashRing.Driver do
     end
   end
 
+  def find(port, index, key) when not is_binary(key), do: find(port, index, to_string(key))
   def find(port, index, key) do
     command(port, <<5::size(8), index::size(32), size(key)::size(32), key::binary>>)
     receive do

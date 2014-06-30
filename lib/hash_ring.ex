@@ -30,14 +30,12 @@ defmodule HashRing do
   end
 
   @spec drop(pid, binary | atom) :: :ok | {:error, term}
-  def drop(ring, node) when is_atom(node), do: add(ring, to_string(node))
-  def drop(ring, node) when is_binary(node) do
+  def drop(ring, node) do
     GenServer.call(ring, {:drop, node})
   end
 
   @spec find(pid, binary | atom) :: {:ok, binary} | {:error, term}
-  def find(ring, key) when is_atom(key), do: find(ring, to_string(key))
-  def find(ring, key) when is_binary(key) do
+  def find(ring, key) do
     GenServer.call(ring, {:find, key})
   end
 

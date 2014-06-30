@@ -17,9 +17,9 @@ defmodule HashRing do
   def start_link(opts \\ []) do
     case :erl_ddll.load_driver(lib_path, @driver) do
       :ok ->
-        replicas  = Keyword.get(opts, :replicas, 128)
-        hash_func = Keyword.get(opts, :hash_func, :md5)
-        GenServer.start_link(__MODULE__, [replicas, hash_func])
+        {replicas, opts}  = Keyword.pop(opts, :replicas, 128)
+        {hash_func, opts} = Keyword.pop(opts, :hash_func, :md5)
+        GenServer.start_link(__MODULE__, [replicas, hash_func], opts)
       error ->
         error
     end

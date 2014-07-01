@@ -1,4 +1,11 @@
 defmodule HashRing.Driver do
+  @moduledoc """
+  A helper library for loading, starting, stopping, and communicating to an Erlang
+  port to the C hash-ring library.
+
+  All functions are synchronous unless explicitly specified.
+  """
+
   @driver "hash_ring_drv"
   @port_timeout 5000
 
@@ -16,6 +23,10 @@ defmodule HashRing.Driver do
     @mode_libmemcached_compat,
   ]
 
+  @doc """
+  Add a node to a hash ring.
+  """
+  @spec add(pid, integer, binary) :: :ok | {:error, atom}
   def add(_, _, []), do: :ok
   def add(port, index, [node|rest]) do
     case add(port, index, node) do
@@ -39,6 +50,10 @@ defmodule HashRing.Driver do
     end
   end
 
+  @doc """
+  Close an open driver.
+  """
+  @spec close(pid) :: :ok
   def close(port) do
     send(port, {self, :close})
     receive do
@@ -47,6 +62,10 @@ defmodule HashRing.Driver do
     end
   end
 
+  @doc """
+  Create a new ring in an open port.
+  """
+  @spec create(pid, integer, atom | integer) :: {:ok, integer} | {:error, atom}
   def create(port, replicas, :md5), do: create(port, replicas, @hash_function_md5)
   def create(port, replicas, :sha1), do: create(port, replicas, @hash_function_sha1)
   def create(port, replicas, hash_func) when hash_func in @hash_functions do
@@ -61,6 +80,10 @@ defmodule HashRing.Driver do
   end
   def create(_, _, _), do: {:error, :unsupported_hash_func}
 
+  @doc """
+  Drop a node from a hash ring.
+  """
+  @spec drop(pid, integer, binary) :: :ok | {:error, atom}
   def drop(port, index, node) when not is_binary(node), do: drop(port, index, to_string(node))
   def drop(port, index, node) do
     command(port, <<4::size(8), index::size(32), size(node)::size(32), node::binary>>)
@@ -75,6 +98,10 @@ defmodule HashRing.Driver do
     end
   end
 
+  @doc """
+  Find the appropriate node for the given key in a hash ring.
+  """
+  @spec find(pid, integer, binary) :: {:ok, binary} | {:error, atom}
   def find(port, index, key) when not is_binary(key), do: find(port, index, to_string(key))
   def find(port, index, key) do
     command(port, <<5::size(8), index::size(32), size(key)::size(32), key::binary>>)
@@ -90,10 +117,18 @@ defmodule HashRing.Driver do
     end
   end
 
+  @doc """
+  Load the port driver.
+  """
+  @spec load :: :ok | {:error, term}
   def load do
     :erl_ddll.load_driver(lib_path, @driver)
   end
 
+  @doc """
+  Set the mode for the given ring.
+  """
+  @spec set_mode(pid, integer, atom | integer) :: :ok | {:error, atom}
   def set_mode(port, index, :normal), do: set_mode(port, index, @mode_normal)
   def set_mode(port, index, :memcached), do: set_mode(port, index, @mode_libmemcached_compat)
   def set_mode(port, index, mode) when mode in @modes do
@@ -109,6 +144,10 @@ defmodule HashRing.Driver do
     {:error, :unsupported_mode}
   end
 
+  @doc """
+  Open an erlang port with the port driver.
+  """
+  @spec open :: pid
   def open do
     :erlang.open_port({:spawn, @driver}, [:binary])
   end

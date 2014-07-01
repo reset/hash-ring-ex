@@ -1,4 +1,31 @@
 defmodule HashRing do
+  @moduledoc """
+  A consistent hash-ring implemention leveraging the excellent
+  [C hash-ring lib](https://github.com/chrismoos/hash-ring) by
+  [Chris Moos](https://github.com/chrismoos) for Elixir.
+
+  ### Example
+
+  Start a new hash ring and add some nodes
+
+    {:ok, pid} = HashRing.start_link
+    :ok = HashRing.add(pid, "first_node")
+    :ok = HashRing.add(pid, "second_node")
+
+  Find the appropriate node for your key
+
+    {:ok, "first_node"} = HashRing.find(pid, "my_key")
+
+  Drop a node
+
+    :ok = HashRing.drop(pid, "first_node")
+    {:ok, "second_node"} = HashRing.find(pid, "my_key")
+
+  Stop the ring
+
+    :ok = HashRing.stop
+  """
+
   use GenServer
   alias HashRing.Driver
 

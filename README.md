@@ -1,5 +1,7 @@
 # HashRing
 
+[![Build Status](https://travis-ci.org/reset/hash-ring-ex.png?branch=master)](https://travis-ci.org/reset/hash-ring-ex)
+
 A consistent hash-ring implemention leveraging the excellent [C hash-ring lib](https://github.com/chrismoos/hash-ring) by [Chris Moos](https://github.com/chrismoos) for Elixir.
 
 ## Requirements

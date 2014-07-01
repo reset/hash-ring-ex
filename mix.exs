@@ -3,7 +3,7 @@ defmodule HashRing.Mixfile do
 
   def project do
     [app: :hash_ring_ex,
-     version: "0.0.1",
+     version: "1.0.0",
      elixir: "~> 0.13",
      description: description,
      package: package,

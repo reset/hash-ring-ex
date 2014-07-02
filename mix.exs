@@ -31,7 +31,8 @@ defmodule HashRing.Mixfile do
     [
       contributors: ["Jamie Winsor"],
       licenses: ["Apache 2.0"],
-      links: %{"GitHub" => "https://github.com/reset/hash-ring-ex"}
+      links: %{"GitHub" => "https://github.com/reset/hash-ring-ex"},
+      files: ["lib", "mix.exs", "README*", "LICENSE", "rebar*"]
     ]
   end
 end

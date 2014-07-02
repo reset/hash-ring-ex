@@ -161,9 +161,9 @@ defmodule HashRing.Driver do
   end
 
   defp lib_path do
-    case :code.priv_dir(:hash_ring) do
+    case :code.priv_dir(:hash_ring_ex) do
       {:error, :bad_name} ->
-        Path.join([Path.dirname(:code.which(:hash_ring)), "..", "priv"])
+        Path.join([Path.dirname(:code.which(:hash_ring_ex)), "..", "priv"])
       path ->
         path
     end

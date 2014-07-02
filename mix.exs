@@ -2,12 +2,15 @@ defmodule HashRing.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :hash_ring_ex,
-     version: "1.0.0",
-     elixir: "~> 0.13",
-     description: description,
-     package: package,
-     deps: deps]
+    [
+      app: :hash_ring_ex,
+      version: "1.0.0",
+      elixir: "~> 0.13",
+      description: description,
+      package: package,
+      deps: deps,
+      compilers: [:yecc, :leex, :rebar, :erlang, :elixir, :app]
+    ]
   end
 
   def application do
@@ -15,9 +18,7 @@ defmodule HashRing.Mixfile do
   end
 
   defp deps do
-    [
-      {:hash_ring, github: "chrismoos/hash-ring"},
-    ]
+    []
   end
 
   defp description do
@@ -32,5 +33,14 @@ defmodule HashRing.Mixfile do
       licenses: ["Apache 2.0"],
       links: %{"GitHub" => "https://github.com/reset/hash-ring-ex"}
     ]
+  end
+end
+
+defmodule Mix.Tasks.Compile.Rebar do
+  use Mix.Task
+
+  def run(_) do
+    Mix.shell.cmd "./rebar g-d"
+    Mix.shell.cmd "./rebar co"
   end
 end

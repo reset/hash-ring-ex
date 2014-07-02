@@ -1,6 +1,8 @@
 /_build
+/priv
 /deps
 erl_crash.dump
 *.ez
 mix.lock
 Gemfile.lock
+/.rebar

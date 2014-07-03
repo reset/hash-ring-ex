@@ -108,7 +108,7 @@ defmodule HashRing do
   end
 
   def handle_call(:stop, _, state) do
-    {:stop, :normal, state}
+    {:stop, :normal, :ok, state}
   end
 
   def handle_info({:EXIT, port, _} = port_exit, %{port: port} = state) do
@@ -118,5 +118,6 @@ defmodule HashRing do
   def terminate({:EXIT, port, _}, %{port: port}), do: :ok
   def terminate(_, %{port: port}) do
     Driver.close(port)
+    :ok
   end
 end

@@ -122,7 +122,14 @@ defmodule HashRing.Driver do
   """
   @spec load :: :ok | {:error, term}
   def load do
-    :erl_ddll.load_driver(lib_path, @driver)
+    case :erl_ddll.load_driver(lib_path, @driver) do
+      :ok ->
+        :ok
+      {:error, :already_loaded} ->
+        :ok
+      {:error, message} ->
+        exit(:erl_ddll.format_error(message))
+    end
   end
 
   @doc """

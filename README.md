@@ -6,7 +6,7 @@ A consistent hash-ring implemention leveraging the excellent [C hash-ring lib](h
 
 ## Requirements
 
-* Elixir 0.13.0 or newer
+* Elixir 0.15.1 or newer
 
 ## Installation
 

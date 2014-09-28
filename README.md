@@ -15,7 +15,7 @@ Add HashRing as a dependency in your `mix.exs` file
 ```elixir
 defp deps do
   [
-    {hash_ring: "~> 1.0"}
+    {hash_ring_ex: "~> 1.0"}
   ]
 end
 ```

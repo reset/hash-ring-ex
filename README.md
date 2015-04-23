@@ -47,7 +47,7 @@ Nodes can also be easily dropped
 
 ### Configuring
 
-Started rings will use an MD5 hash function by default. In tests MD5 is on average about 25% faster. The hashing function to use can be specified as an option sent to `start_link/1 or `start/1`
+Started rings will use an MD5 hash function by default. In tests MD5 is on average about 25% faster than sha1. The hashing function to use can be specified as an option sent to `start_link/1 or `start/1`
 
 ```elixir
 {:ok, md5}  = HashRing.start_link(hash_func: :md5)

@@ -170,7 +170,7 @@ defmodule HashRing.Driver do
   defp lib_path do
     case :code.priv_dir(:hash_ring_ex) do
       {:error, :bad_name} ->
-        Path.join([Path.dirname(:code.which(:hash_ring_ex)), "..", "priv"])
+        :code.where_is_file('#{@driver}.so') |> Path.dirname
       path ->
         path
     end

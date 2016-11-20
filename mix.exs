@@ -5,11 +5,11 @@ defmodule HashRing.Mixfile do
     [
       app: :hash_ring_ex,
       version: "1.1.2",
-      elixir: "~> 1.0.0 or ~> 0.15.1",
+      elixir: "~> 1.1",
       description: description,
       package: package,
       deps: deps,
-      compilers: [:yecc, :leex, :rebar, :erlang, :elixir, :app]
+      compilers: Mix.compilers ++ [:copy_lib]
     ]
   end
 
@@ -18,7 +18,9 @@ defmodule HashRing.Mixfile do
   end
 
   defp deps do
-    []
+    [
+      {:hash_ring, github: "chrismoos/hash-ring"}
+    ]
   end
 
   defp description do
@@ -37,11 +39,22 @@ defmodule HashRing.Mixfile do
   end
 end
 
-defmodule Mix.Tasks.Compile.Rebar do
+defmodule Mix.Tasks.Compile.CopyLib do
   use Mix.Task
 
   def run(_) do
-    Mix.shell.cmd "./rebar g-d"
-    Mix.shell.cmd "./rebar co"
+    priv = :code.priv_dir(:hash_ring_ex)
+
+    File.mkdir_p!(priv)
+
+    hr_priv = :code.priv_dir(:hash_ring)
+
+    File.ls!(hr_priv)
+    |> Enum.filter(&(String.ends_with?(&1, ".so")))
+    |> Enum.each(fn (filename) ->
+      source_path = Path.join(hr_priv, filename)
+      dest_path = Path.join(priv, filename)
+      File.cp!(source_path, dest_path)
+    end)
   end
 end

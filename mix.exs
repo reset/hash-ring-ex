@@ -44,4 +44,6 @@ defmodule Mix.Tasks.Compile.Rebar do
     Mix.shell.cmd "./rebar g-d"
     Mix.shell.cmd "./rebar co"
   end
+
+  Mix.Project.build_structure()
 end
